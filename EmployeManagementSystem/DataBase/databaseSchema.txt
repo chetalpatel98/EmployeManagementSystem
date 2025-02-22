@@ -3,7 +3,7 @@ USE dbEmployManagementSystem;
 
 -- Employee Table
 CREATE TABLE tblEmploy (
-    idEmploy INT PRIMARY KEY AUTO_INCREMENT,
+    idEmploy INT PRIMA RY KEY AUTO_INCREMENT,
     Name VARCHAR(255) NOT NULL,
     Email VARCHAR(255) UNIQUE NOT NULL,
     PhoneNumber VARCHAR(15) UNIQUE NOT NULL,
