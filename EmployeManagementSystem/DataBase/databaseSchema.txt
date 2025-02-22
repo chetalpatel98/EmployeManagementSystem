@@ -1,0 +1,88 @@
+﻿CREATE DATABASE dbEmployManagementSystem;
+USE dbEmployManagementSystem;
+
+-- Employee Table
+CREATE TABLE tblEmploy (
+    idEmploy INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) UNIQUE NOT NULL,
+    PhoneNumber VARCHAR(15) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL,
+    Address TEXT NOT NULL,
+    State VARCHAR(100) NOT NULL,
+    City VARCHAR(100) NOT NULL,
+    Salary DECIMAL(10,2) NOT NULL,
+    JoinDate DATE NOT NULL,
+    PreviousExperience DECIMAL(4,1) DEFAULT 0.0,
+    DateAdd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    IsActive BOOLEAN DEFAULT TRUE,
+    IdDepartment INT,
+    FOREIGN KEY (IdDepartment) REFERENCES tblDepartment(IdDepartment) ON DELETE SET NULL
+);
+
+-- Department Table
+CREATE TABLE tblDepartment (
+    IdDepartment INT PRIMARY KEY AUTO_INCREMENT,
+    DepartmentName VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- Leave Table
+CREATE TABLE tblLeave (
+    idLeave INT PRIMARY KEY AUTO_INCREMENT,
+    idEmploy INT NOT NULL,
+    Subject VARCHAR(255) NOT NULL,
+    LeaveBody TEXT NOT NULL,
+    Status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+    LeaveDate DATE NOT NULL,
+    DateAdd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+);
+
+-- Attendance Table
+CREATE TABLE tblAttendance (
+    idAttendance INT PRIMARY KEY AUTO_INCREMENT,
+    idEmploy INT NOT NULL,
+    LogInTime DATETIME NOT NULL,
+    LogoutTime DATETIME DEFAULT NULL,
+    Date DATE NOT NULL,
+    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+);
+
+-- Project Table
+CREATE TABLE tblProject (
+    idProject INT PRIMARY KEY AUTO_INCREMENT,
+    ProjectName VARCHAR(255) NOT NULL,
+    ProjectDetails TEXT NOT NULL,
+    ProjectStartDate DATE NOT NULL,
+    ProjectEndDate DATE DEFAULT NULL,
+    ProjectStatus ENUM('Not Started', 'In Progress', 'Completed', 'On Hold') DEFAULT 'Not Started',
+    ProjectLanguagesJson JSON NOT NULL
+);
+
+-- Project Employees Table
+CREATE TABLE tblProjectEmployees (
+    idProjectEmployees INT PRIMARY KEY AUTO_INCREMENT,
+    idProject INT NOT NULL,
+    idEmploy INT NOT NULL,
+    FOREIGN KEY (idProject) REFERENCES tblProject(idProject) ON DELETE CASCADE,
+    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+);
+
+-- Employee Salary History Table
+CREATE TABLE tblSalaryHistory (
+    idSalaryHistory INT PRIMARY KEY AUTO_INCREMENT,
+    idEmploy INT NOT NULL,
+    LastSalary DECIMAL(10,2) NOT NULL,
+    DateAdd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+);
+
+-- Notice Table
+CREATE TABLE tblNotice (
+    idNotice INT PRIMARY KEY AUTO_INCREMENT,
+    Notice TEXT NOT NULL,
+    idEmploy INT NOT NULL,
+    DateAdd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+);
