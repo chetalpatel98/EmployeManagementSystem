@@ -1,88 +1,93 @@
-﻿CREATE DATABASE dbEmployManagementSystem;
-USE dbEmployManagementSystem;
+﻿-- Create the database
+CREATE DATABASE dbEmployeManagementSystem;
+GO
 
--- Employee Table
+-- Use the newly created database
+USE dbEmployeManagementSystem;
+GO
+
+-- Create Department Table
+CREATE TABLE tblDepartment (
+    IdDepartment INT PRIMARY KEY IDENTITY(1,1),
+    DepartmentName VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- Create Employee Table
 CREATE TABLE tblEmploy (
-    idEmploy INT PRIMARY KEY AUTO_INCREMENT,
+    idEmploy INT PRIMARY KEY IDENTITY(1,1),
     Name VARCHAR(255) NOT NULL,
     Email VARCHAR(255) UNIQUE NOT NULL,
     PhoneNumber VARCHAR(15) UNIQUE NOT NULL,
-    Password VARCHAR(255) NOT NULL,
+    Password VARCHAR(255) NOT NULL, -- Ensure this is hashed
     Address TEXT NOT NULL,
     State VARCHAR(100) NOT NULL,
     City VARCHAR(100) NOT NULL,
     Salary DECIMAL(10,2) NOT NULL,
     JoinDate DATE NOT NULL,
     PreviousExperience DECIMAL(4,1) DEFAULT 0.0,
-    DateAdd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UpdateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    IsActive BOOLEAN DEFAULT TRUE,
+    DateAdd DATETIME DEFAULT GETDATE(),
+    UpdateDate DATETIME DEFAULT GETDATE(),
+    IsActive BIT DEFAULT 1,
     IdDepartment INT,
-    FOREIGN KEY (IdDepartment) REFERENCES tblDepartment(IdDepartment) ON DELETE SET NULL
+    CONSTRAINT FK_Employ_Department FOREIGN KEY (IdDepartment) REFERENCES tblDepartment(IdDepartment) ON DELETE SET NULL
 );
 
--- Department Table
-CREATE TABLE tblDepartment (
-    IdDepartment INT PRIMARY KEY AUTO_INCREMENT,
-    DepartmentName VARCHAR(255) UNIQUE NOT NULL
-);
-
--- Leave Table
+-- Create Leave Table
 CREATE TABLE tblLeave (
-    idLeave INT PRIMARY KEY AUTO_INCREMENT,
+    idLeave INT PRIMARY KEY IDENTITY(1,1),
     idEmploy INT NOT NULL,
     Subject VARCHAR(255) NOT NULL,
     LeaveBody TEXT NOT NULL,
-    Status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+    Status VARCHAR(50) DEFAULT 'Pending', -- ENUM simulation
     LeaveDate DATE NOT NULL,
-    DateAdd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+    DateAdd DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_Leave_Employ FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
 );
 
--- Attendance Table
+-- Create Attendance Table
 CREATE TABLE tblAttendance (
-    idAttendance INT PRIMARY KEY AUTO_INCREMENT,
+    idAttendance INT PRIMARY KEY IDENTITY(1,1),
     idEmploy INT NOT NULL,
     LogInTime DATETIME NOT NULL,
-    LogoutTime DATETIME DEFAULT NULL,
+    LogoutTime DATETIME,
     Date DATE NOT NULL,
-    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+    CONSTRAINT FK_Attendance_Employ FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
 );
 
--- Project Table
+-- Create Project Table
 CREATE TABLE tblProject (
-    idProject INT PRIMARY KEY AUTO_INCREMENT,
+    idProject INT PRIMARY KEY IDENTITY(1,1),
     ProjectName VARCHAR(255) NOT NULL,
     ProjectDetails TEXT NOT NULL,
     ProjectStartDate DATE NOT NULL,
-    ProjectEndDate DATE DEFAULT NULL,
-    ProjectStatus ENUM('Not Started', 'In Progress', 'Completed', 'On Hold') DEFAULT 'Not Started',
-    ProjectLanguagesJson JSON NOT NULL
+    ProjectEndDate DATE,
+    ProjectStatus VARCHAR(50) DEFAULT 'Not Started', -- ENUM simulation
+    ProjectLanguagesJson NVARCHAR(MAX) NOT NULL -- JSON data
 );
 
--- Project Employees Table
+-- Create Project Employees Table
 CREATE TABLE tblProjectEmployees (
-    idProjectEmployees INT PRIMARY KEY AUTO_INCREMENT,
+    idProjectEmployees INT PRIMARY KEY IDENTITY(1,1),
     idProject INT NOT NULL,
     idEmploy INT NOT NULL,
-    FOREIGN KEY (idProject) REFERENCES tblProject(idProject) ON DELETE CASCADE,
-    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+    CONSTRAINT FK_ProjectEmployees_Project FOREIGN KEY (idProject) REFERENCES tblProject(idProject) ON DELETE CASCADE,
+    CONSTRAINT FK_ProjectEmployees_Employ FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
 );
 
--- Employee Salary History Table
+-- Create Employee Salary History Table
 CREATE TABLE tblSalaryHistory (
-    idSalaryHistory INT PRIMARY KEY AUTO_INCREMENT,
+    idSalaryHistory INT PRIMARY KEY IDENTITY(1,1),
     idEmploy INT NOT NULL,
     LastSalary DECIMAL(10,2) NOT NULL,
-    DateAdd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+    DateAdd DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_SalaryHistory_Employ FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
 );
 
--- Notice Table
+-- Create Notice Table
 CREATE TABLE tblNotice (
-    idNotice INT PRIMARY KEY AUTO_INCREMENT,
+    idNotice INT PRIMARY KEY IDENTITY(1,1),
     Notice TEXT NOT NULL,
     idEmploy INT NOT NULL,
-    DateAdd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
+    DateAdd DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_Notice_Employ FOREIGN KEY (idEmploy) REFERENCES tblEmploy(idEmploy) ON DELETE CASCADE
 );
