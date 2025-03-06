@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = " Welcome To Registration Page";
+    ViewData["Title"] = "Register";
     Layout = null;
 }
 
@@ -9,128 +9,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Employee Registration</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
         }
 
-        .registration-form {
-            max-width: 600px;
-            margin: 50px auto;
-            background: white;
-            padding: 20px;
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .registration-container {
+            display: flex;
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
         }
 
-        .form-control, .form-select {
-            border-radius: 5px;
+        .image-section {
+            flex: 1;
         }
 
-        .btn-custom {
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
+        .form-section {
+            flex: 1;
+            padding: 30px;
         }
 
-            .btn-custom:hover {
-                background-color: #0056b3;
+        .step {
+            display: none;
+        }
+
+            .step.active {
+                display: block;
             }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="registration-form">
-            <h3 class="text-center mb-4">Employee Registration</h3>
-            <form action="submit.php" method="post" enctype="multipart/form-data">
+        <div class="registration-container">
+            <div class="image-section">
+                <img src="~/image/registerleftimg.svg" />
+            </div>
+            <div class="form-section">
+                <h3 class="text-center mb-4">Employee Registration</h3>
+                <form id="registrationForm">
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" name="name" required>
+                    <div class="step active" id="step1">
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address" required>
+                        </div>
+                        <button type="button" class="btn btn-primary w-100" onclick="nextStep(1)">Next</button>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" required>
-                    </div>
-                </div>
 
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" name="phone" required>
+                    <div class="step" id="step2">
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="HR">HR</option>
+                                <option value="IT">IT</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Salary</label>
+                            <input type="number" class="form-control" name="salary" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" name="confirm_password" required>
+                        </div>
+                        <div style="display:flex;">
+                            <button type="button" class="btn btn-secondary w-50" onclick="prevStep(2)">Previous</button>
+                            <div style="width:20px"></div>
+                            <button type="button" class="btn btn-primary w-50" onclick="nextStep(2)">Next</button>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Salary</label>
-                        <input type="number" class="form-control" name="salary" required>
-                    </div>
-                </div>
 
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" name="confirm_password" required>
-                    </div>
-                </div>
+                    <div class="step" id="step3">
+                       
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Profile Photo</label>
+                            <input type="file" class="form-control" name="profilePhoto" accept="image/*">
+                        </div>
+                        <div style="display:flex;">
+                            <button type="button" class="btn btn-secondary w-50" onclick="prevStep(3)">Previous</button>
+                            <div style="width:20px"></div>
+                            <button type="submit" class="btn btn-success w-50">Register</button>
+                        </div>
 
-                <div class="mt-3">
-                    <label class="form-label">Address</label>
-                    <input type="text" class="form-control" name="address" required>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label">State</label>
-                        <input type="text" class="form-control" name="state" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">City</label>
-                        <input type="text" class="form-control" name="city" required>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Join Date</label>
-                        <input type="date" class="form-control" name="join_date" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Previous Experience (Years)</label>
-                        <input type="number" step="0.1" class="form-control" name="experience">
-                    </div>
-                </div>
-
-                <div class="mt-3">
-                    <label class="form-label">Department</label>
-                    <select class="form-select" name="department" required>
-                        <option value="">Select Department</option>
-                        <option value="HR">HR</option>
-                        <option value="IT">IT</option>
-                        <option value="Finance">Finance</option>
-                    </select>
-                </div>
-
-                <div class="mt-3">
-                    <label class="form-label">Profile Photo</label>
-                    <input type="file" class="form-control" name="profile" accept="image/*">
-                </div>
-
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-custom w-100">Register</button>
-                </div>
-
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentStep = 1;
+
+        function nextStep(step) {
+            document.getElementById(`step${step}`).classList.remove("active");
+            document.getElementById(`step${step + 1}`).classList.add("active");
+            currentStep++;
+        }
+
+        function prevStep(step) {
+            document.getElementById(`step${step}`).classList.remove("active");
+            document.getElementById(`step${step - 1}`).classList.add("active");
+            currentStep--;
+        }
+    </script>
 </body>
 </html>
